@@ -6,20 +6,20 @@
     <div class="login-box">
       <div class="logo-box">
         <div class="right">
-          <div class="sys-name">比特OJ后台管理</div>
-          <div class="sys-sub-name">帮助100万学生就业</div>
+          <div class="sys-name">⽐特OJ后台管理</div>
+          <div class="sys-sub-name">帮助100万学⽣就业</div>
         </div>
       </div>
       <div class="form-box">
         <div class="form-item">
           <img src="../assets/images/shouji.png">
-          <el-input placeholder="请输入账号" />
+          <el-input v-model="userAccount" placeholder="请输⼊账号" />
         </div>
         <div class="form-item">
           <img src="../assets/images/yanzhengma.png">
-          <el-input placeholder="请输入密码" />
+          <el-input v-model="password" placeholder="请输⼊密码" />
         </div>
-        <div class="submit-box">
+        <div class="submit-box" @click="loginFun">
           登录
         </div>
       </div>
@@ -28,6 +28,18 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { loginService } from '@/apis/sUser';
+
+
+const userAccount = ref('')
+const password = ref('')
+
+function loginFun(){
+  loginService(userAccount, password)
+}
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -36,34 +48,9 @@
   height: 100vh;
   position: relative;
   overflow: hidden;
-
+  
   .login-box {
     overflow: hidden;
-    width: 456px;
-    height: 404px;
-    background: #ffffff;
-    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    opacity: 0.9;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    padding: 0 72px;
-    padding-top: 50px;
-
-    &::after {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      bottom: 0;
-      right: 0;
-      background: rgba(255, 255, 255, 0.8);
-      z-index: 1;
-      content: '';
-    }
 
     .logo-box {
       display: flex;
@@ -101,7 +88,7 @@
         margin-top: 90px;
         width: 456px;
         height: 48px;
-        background: #32c5ff;
+        background: #32C5FF;
         border-radius: 8px;
         cursor: pointer;
         display: flex;
@@ -110,90 +97,116 @@
         font-family: PingFangSC, PingFang SC;
         font-weight: 600;
         font-size: 16px;
-        color: #ffffff;
+        color: #FFFFFF;
         letter-spacing: 1px;
       }
-    }
 
-    .form-item {
-      display: flex;
-      align-items: center;
-      width: 456px;
-      height: 48px;
-      background: #f8f8f8;
-      border-radius: 8px;
-      margin-bottom: 30px;
-      position: relative;
-
-      .code-btn-box {
-        position: absolute;
-        right: 0;
-        width: 151px;
-        height: 48px;
-        background: #32c5ff;
-        border-radius: 8px;
-        top: 0;
+      .form-item {
         display: flex;
         align-items: center;
-        justify-content: center;
-        cursor: pointer;
+        width: 456px;
+        height: 48px;
+        background: #F8F8F8;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        position: relative;
 
-        span {
+        .code-btn-box {
+          position: absolute;
+          right: 0;
+          width: 151px;
+          height: 48px;
+          background: #32C5FF;
+          border-radius: 8px;
+          top: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+
+          span {
+            font-family: PingFangSC, PingFang SC;
+            font-weight: 400;
+            font-size: 16px;
+            color: #FFFFFF;
+          }
+        }
+
+        .error-tip {
+          position: absolute;
+          width: 140px;
+          text-align: right;
+          padding-right: 12px;
+          height: 20px;
+          font-family: PingFangSC, PingFang SC;
+          font-weight: 400;
+          font-size: 14px;
+          color: #FD4C40;
+          line-height: 20px;
+          right: 0;
+
+          &.bottom {
+            right: 157px;
+          }
+        }
+
+        .el-input {
+          width: 380px;
           font-family: PingFangSC, PingFang SC;
           font-weight: 400;
           font-size: 16px;
-          color: #ffffff;
+          color: #222222;
         }
-      }
 
-      .error-tip {
-        position: absolute;
-        width: 140px;
-        text-align: right;
-        padding-right: 12px;
-        height: 20px;
-        font-family: PingFangSC, PingFang SC;
-        font-weight: 400;
-        font-size: 14px;
-        color: #fd4c40;
-        line-height: 20px;
-        right: 0;
-
-        &.bottom {
-          right: 157px;
+        .el-input__wrapper {
+          border: none;
+          box-shadow: none;
+          background: transparent;
+          width: 230px;
+          padding-left: 0;
         }
-      }
 
-      .el-input {
-        width: 380px;
-        font-family: PingFangSC, PingFang SC;
-        font-weight: 400;
-        font-size: 16px;
-        color: #222222;
-      }
-
-      .el-input__wrapper {
-        border: none;
-        box-shadow: none;
-        background: transparent;
-        width: 230px;
-        padding-left: 0;
-      }
-
-      img {
-        width: 24px;
-        height: 24px;
-        margin: 0 18px;
+        img {
+          width: 24px;
+          height: 24px;
+          margin: 0 18px;
+        }
       }
     }
+
+    width:456px;
+    height:404px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    opacity: 0.9;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    padding: 0 72px;
+    padding-top: 50px;
+  }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    bottom: 0;
+    right: 0;
+    background: rgba(255, 255, 255, .8);
+    z-index: 1;
+    content: '';
   }
 
   .orange {
-    background: #f0714a;
+    background: #F0714A;
     width: 498px;
     height: 498px;
     border-radius: 50%;
-    background: #f0714a;
+    background: #F0714A;
     opacity: 0.67;
     filter: blur(50px);
     left: 14.2%;
@@ -204,7 +217,7 @@
   .blue {
     width: 334px;
     height: 334px;
-    background: #32c5ff;
+    background: #32C5FF;
     opacity: 0.67;
     filter: blur(50px);
     left: 14.2%;
