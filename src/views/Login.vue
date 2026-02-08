@@ -17,7 +17,7 @@
         </div>
         <div class="form-item">
           <img src="../assets/images/yanzhengma.png">
-          <el-input v-model="password" placeholder="请输⼊密码" />
+          <el-input v-model="password" type="password" placeholder="请输⼊密码" show-password/>
         </div>
         <div class="submit-box" @click="loginFun">
           登录
@@ -29,14 +29,36 @@
 
 <script setup>
 import { ref } from 'vue'
-import { loginService } from '@/apis/sUser';
+import { loginService } from '@/apis/suser';
+import { setToken } from '@/utils/cookie';
+import router from '@/router';
 
 
 const userAccount = ref('')
 const password = ref('')
 
-function loginFun(){
-  loginService(userAccount, password)
+async function loginFun(){
+  try {
+    //登录成功
+    const loginResult = await loginService(userAccount.value, password.value)
+    console.log("loginResult:", loginResult)
+    router.push("/oj/system")
+    setToken(loginResult.data.data)
+  } catch(error) {
+    //登录失败
+    console.log("loginResult:", error)
+  }
+
+  // if(loginResult.data.code === 1000){ //优化点
+  //   //登陆成功
+  //   console.log("登陆成功")
+  //   router.push("/oj/system")
+  //   setToken(loginResult.data.data)
+  // } else{
+  //   //登录失败
+  //   console.log("登录失败")
+  //   ElMessage.error(loginResult.data.msg)
+  // }
 }
 
 
