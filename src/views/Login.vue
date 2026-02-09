@@ -42,7 +42,7 @@ async function loginFun(){
     //登录成功
     const loginResult = await loginService(userAccount.value, password.value)
     console.log("loginResult:", loginResult)
-    router.push("/oj/system")
+    router.push("/oj/layout")
     setToken(loginResult.data.data)
   } catch(error) {
     //登录失败
