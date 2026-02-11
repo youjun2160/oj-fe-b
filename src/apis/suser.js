@@ -8,3 +8,11 @@ export function loginService(userAccount, password) {
     data:{userAccount, password}
   })
 }
+
+
+export function getUserInfoService(userAccount, password) {
+  return service({
+    url:"/sysUser/info",
+    method:"get",
+  })
+}

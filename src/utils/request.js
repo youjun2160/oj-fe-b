@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "./cookie";
 
 //不同的功能，通过axios请求的是不同的接口地址
 //127.0.0.1:19090
@@ -7,7 +8,21 @@ const service = axios.create({
   timeout:5000,
 })
 
+// 请求拦截器
+service.interceptors.request.use(
+  (config) => {
+    if (getToken()) {
+      config.headers["Authorization"] = "Bearer " + getToken();
+    }
+    return config;
+  },
+  (error) => {
+    console.log(error)
+    Promise.reject(error);
+  }
+);
 
+//响应拦截器
 service.interceptors.response.use(
  (res) => {  //res -> 响应数据
  // 未设置状态码则默认成功状态
