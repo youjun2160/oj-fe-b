@@ -3,6 +3,7 @@ import { getToken, removeToken } from "./cookie";
 
 //不同的功能，通过axios请求的是不同的接口地址
 //127.0.0.1:19090
+axios.defaults.headers["Content-Type"] = "application/json;charset=utf-8";
 const service = axios.create({
   baseURL:"/dev-api",
   timeout:5000,

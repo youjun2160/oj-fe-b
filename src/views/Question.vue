@@ -9,7 +9,7 @@
     <el-form-item>
       <el-button plain @Click="onSearch">搜索</el-button>
       <el-button plain type="info" @Click="onReset">重置</el-button>
-      <el-button plain type="primary" :icon="Plus">添加题目</el-button>
+      <el-button plain type="primary" :icon="Plus" @Click="onAddQuetion">添加题目</el-button>
     </el-form-item>
   </el-form>
 
@@ -35,6 +35,9 @@
   <el-pagination background size="small" layout="total, sizes, prev, pager, next, jumper" :total="total" :page-sizes="[5,10,15,20]"
     v-model:current-page="params.pageNum" v-model:page-size="params.pageSize"
     @size-change="handleSizeChange"  @current-change="handleCurrentChange"/>
+
+
+    <QuestionDrawer ref="questionDrawerRef" @success="onSuccess"></QuestionDrawer>
 </template>
 
 <script setup>
@@ -42,6 +45,7 @@ import { Plus } from "@element-plus/icons-vue"
 import Selector from "@/components/QuestionSelector.vue"
 import { reactive, ref } from 'vue'
 import { getQuestionListService } from "@/apis/question";
+import QuestionDrawer from "@/components/QuestionDrawer.vue";
 
 const params = reactive({
   pageNum: 1,
@@ -83,6 +87,17 @@ function onReset(){
   params.pageSize = 10
   params.title = ''
   params.difficulty = ''
+  getQuestionList()
+}
+
+const questionDrawerRef = ref()
+
+function onAddQuetion() {
+  questionDrawerRef.value.open()
+}
+
+function onSuccess() {
+  params.pageNum = 1
   getQuestionList()
 }
 </script>
