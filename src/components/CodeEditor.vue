@@ -42,6 +42,14 @@
       editor = null;
     }
   });
+
+  function setAceCode(content) {
+    editor.setValue(content)
+  }
+
+  defineExpose ({
+    setAceCode
+  })
 </script>
 
 <style lang="scss" scoped>

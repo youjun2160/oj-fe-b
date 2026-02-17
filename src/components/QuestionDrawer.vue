@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="visibleDrawer" :with-header="false" :destory-on-close="true" size="50%">
+  <el-drawer v-model="visibleDrawer" :destroy-on-close="true" :with-header="false" size="50%">
     <el-form :model="formModel" ref="formRef">
       <el-form-item label="题目标题:">
         <el-input style="width:387px !important" v-model="formQuestion.title" placeholder="请输入标题">
@@ -20,7 +20,7 @@
       <el-form-item label="题目内容:">
         <div class="editor">
           <quill-editor placeholder="请输入题目内容"
-            v-model:content="formQuestion.content">
+            v-model:content="formQuestion.content" contentType="html">
           </quill-editor>
         </div>
       </el-form-item>
@@ -29,10 +29,10 @@
         </el-input>
       </el-form-item>
       <el-form-item label="默认代码块:">
-        <code-editor @update:value="handleEditorContent"></code-editor>
+        <code-editor @update:value="handleEditorContent" ref="defaultCodeRef"></code-editor>
       </el-form-item>
       <el-form-item label="main函数:">
-        <code-editor @update:value="handleEditorMainFunc"></code-editor>
+        <code-editor @update:value="handleEditorMainFunc" ref="mainFucRef"></code-editor>
       </el-form-item>
       <el-form-item>
         <el-button class="question-button" type="primary" plain @click="onSubmit()">发布</el-button>
@@ -47,7 +47,7 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import codeEditor from './codeEditor.vue';
 import { ref, reactive } from 'vue';
 import QuestionSelector from "@/components/QuestionSelector.vue";
-import { addQuestionService } from '@/apis/question';
+import { addQuestionService,getQuestionDetailService } from '@/apis/question';
 
 const visibleDrawer = ref(false)
 
@@ -62,12 +62,21 @@ const formQuestion = reactive({
   mainFuc: ''
 })
 
-function open() {
+const defaultCodeRef = ref()
+const mainFucRef = ref()
+
+async function open(questionId) {
   visibleDrawer.value = true
   for (const key in formQuestion) {
     if (formQuestion.hasOwnProperty(key)) {
       formQuestion[key] = '';
     }
+  }
+  if(questionId){
+    const questionDetail = await getQuestionDetailService(questionId)
+    Object.assign(formQuestion, questionDetail.data)
+    defaultCodeRef.value.setAceCode(formQuestion.defaultCode)
+    mainFucRef.value.setAceCode(formQuestion.mainFuc)
   }
 }
 
