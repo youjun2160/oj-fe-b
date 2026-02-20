@@ -47,11 +47,12 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import codeEditor from './codeEditor.vue';
 import { ref, reactive } from 'vue';
 import QuestionSelector from "@/components/QuestionSelector.vue";
-import { addQuestionService,getQuestionDetailService } from '@/apis/question';
+import { addQuestionService,getQuestionDetailService,editQuestionService } from '@/apis/question';
 
 const visibleDrawer = ref(false)
 
 const formQuestion = reactive({
+  questionId: '',
   title: '',
   difficulty: '',
   content: '',
@@ -121,9 +122,16 @@ async function onSubmit() {
   for (let key in formQuestion) {
     fd.append(key, formQuestion[key])
   }
-  await addQuestionService(fd)
-  ElMessage.success('添加成功')
-  emit('success')
+  if(formQuestion.questionId) {
+    //编辑题目的请求
+    editQuestionService(fd)
+    ElMessage.success('编辑成功')
+    emit('success')
+  } else {
+    await addQuestionService(fd)
+    ElMessage.success('添加成功')
+    emit('success', 'add')
+  }
   visibleDrawer.value = false
 }
 
