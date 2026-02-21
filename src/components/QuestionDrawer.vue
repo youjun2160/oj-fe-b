@@ -44,7 +44,7 @@
 <script setup>
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
-import codeEditor from './codeEditor.vue';
+import codeEditor from './CodeEditor.vue';
 import { ref, reactive } from 'vue';
 import QuestionSelector from "@/components/QuestionSelector.vue";
 import { addQuestionService,getQuestionDetailService,editQuestionService } from '@/apis/question';
