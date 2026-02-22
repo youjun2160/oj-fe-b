@@ -29,6 +29,11 @@ const router = createRouter({
           component: () => import("@/views/Exam.vue"),
         },
         {
+          path: "updateExam",
+          name: "updateExam",
+          component: () => import("@/views/UpdateExam.vue")
+        },
+        {
           path: "cuser",
           name: "cuser",
           component: () => import("@/views/Cuser.vue"),

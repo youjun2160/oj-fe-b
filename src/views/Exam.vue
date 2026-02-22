@@ -65,6 +65,7 @@
 import { Plus } from '@element-plus/icons-vue'
 import { getExamListService } from '@/apis/exam';
 import { reactive,ref } from 'vue';
+import router from '@/router';
 
 function isNotStartExam(exam) {
   const now = new Date(); //当前时间
@@ -120,5 +121,9 @@ function onReset(){
   params.title = ''
   datetimeRange.value.length = 0
   getExamList()
+}
+
+function onAddExam() {
+  router.push("/oj/layout/updateExam?type=add")
 }
 </script>
