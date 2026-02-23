@@ -33,12 +33,11 @@ export function getExamDetailService(examId) {
   });
 }
 
-// 建议一并添加：编辑竞赛（后续可能会用到）
-export function examEditService(data) {
+export function editExamService(params) {
   return service({
     url: "/exam/edit",
     method: "put",
-    data
+    data: params
   });
 }
 

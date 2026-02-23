@@ -112,7 +112,7 @@
 </template>
 
 <script setup>
-import { examAddService,addExamQuestionService, getExamDetailService } from "@/apis/exam"
+import { examAddService,addExamQuestionService, getExamDetailService, editExamService } from "@/apis/exam"
 import { getQuestionListService } from "@/apis/question"
 import Selector from "@/components/QuestionSelector.vue"
 import router from '@/router'
@@ -145,12 +145,18 @@ async function saveBaseInfo() {
     if (key === 'examDate') {
       fd.append('startTime', formExam.examDate[0]);
       fd.append('endTime', formExam.examDate[1]);
-    } else {
+    } else if(key !== 'startTime' && key !== 'endTime'){
       fd.append(key, formExam[key])
     }
   }
-  const addRes = await examAddService(fd)
-  formExam.examId = addRes.data
+  if(formExam.examId) {
+    //编辑
+    await editExamService(fd)
+  } else {
+    //新增
+    const addRes = await examAddService(fd)
+    formExam.examId = addRes.data
+  }
   ElMessage.success('基本信息保存成功')
 }
 
