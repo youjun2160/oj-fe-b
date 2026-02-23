@@ -43,9 +43,9 @@
   <el-table-column prop="createTime" width="180px" label="创建时间" />
   <el-table-column label="操作" width="180px">
     <template #default="{ row }">
-      <el-button v-if="isNotStartExam(row)" type="text" @click="onEdit(row)">编辑
+      <el-button v-if="isNotStartExam(row)" type="text" @click="onEdit(row.examId)">编辑
       </el-button>
-      <el-button v-if="isNotStartExam(row)" type="text" @click="onDelete(row)" class="red">删除
+      <el-button v-if="isNotStartExam(row)" type="text" @click="onDelete(row.examId)" class="red">删除
       </el-button>
       <el-button v-if="row.status == 1 && isNotStartExam(row)" type="text"
         @click="cancelPublishExam(row.examId)">撤销发布</el-button>
@@ -63,7 +63,7 @@
 
 <script setup>
 import { Plus } from '@element-plus/icons-vue'
-import { getExamListService } from '@/apis/exam';
+import { getExamListService,getExamDetailService } from '@/apis/exam';
 import { reactive,ref } from 'vue';
 import router from '@/router';
 
@@ -125,5 +125,9 @@ function onReset(){
 
 function onAddExam() {
   router.push("/oj/layout/updateExam?type=add")
+}
+
+function onEdit(examId) {
+  router.push(`/oj/layout/updateExam?type=edit&examId=${examId}`)
 }
 </script>

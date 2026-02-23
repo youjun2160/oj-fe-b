@@ -39,7 +39,7 @@
         <el-button class="exam-add-question" :icon="Plus" type="text" @click="addQuestion(formExam.examId)">
           添加题目
         </el-button>
-        <el-table height="136px" :data="formExam.questionList" class="question-select-list">
+        <el-table height="136px" :data="formExam.examQuestionList" class="question-select-list">
           <el-table-column prop="questionId" width="180px" label="题目id" />
           <el-table-column prop="title" :show-overflow-tooltip="true" label="题目标题" />
           <el-table-column prop="difficulty" width="80px" label="题目难度">
@@ -77,7 +77,7 @@
 
             </el-form>
             <!-- 题目列表 -->
-            <el-table :data="questionList" @selection-change="handleSelectionChange" :selectable="selectableMethod">
+            <el-table :data="questionList" @select="handleRowSelect" :selectable="selectableMethod">
               <el-table-column :selectable="selectInit" type="selection" width="80px"></el-table-column>
               <el-table-column prop="questionId" label="题目id" />
               <el-table-column prop="title" label="题目标题" />
@@ -112,7 +112,7 @@
 </template>
 
 <script setup>
-import { examAddService,addExamQuestionService } from "@/apis/exam"
+import { examAddService,addExamQuestionService, getExamDetailService } from "@/apis/exam"
 import { getQuestionListService } from "@/apis/question"
 import Selector from "@/components/QuestionSelector.vue"
 import router from '@/router'
@@ -168,7 +168,7 @@ const dialogVisible = ref(false)
 
 function addQuestion() {
   if (formExam.examId === null || formExam.examId === '') {
-    ElMessage.error('请先保存题目基本信息')
+    ElMessage.error('请先保存竞赛基本信息')
   } else {
     getQuestionList()
     dialogVisible.value = true
@@ -220,6 +220,18 @@ async function submitSelectQuestion() {
   dialogVisible.value = false
   ElMessage.success('竞赛题目添加成功')
 }
+
+async function getExamDetail() {
+  const examId = useRoute().query.examId
+  if(examId) {
+    formExam.examId = examId
+    const examDetail = await getExamDetailService(examId)
+    Object.assign(formExam, examDetail.data)
+    formExam.examDate = [examDetail.data.startTime, examDetail.data.endTime]
+  }
+}
+
+getExamDetail()
 
 </script>
 

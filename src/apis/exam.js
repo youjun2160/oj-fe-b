@@ -9,19 +9,27 @@ export function getExamListService(params) {
 }
 
 // 新增：添加竞赛
-export function examAddService(data) {
+export function examAddService(params = {}) {
   return service({
     url: "/exam/add",
     method: "post",
-    data
+    data: params,
   });
 }
 
-export function addExamQuestionService(data) {
+export function addExamQuestionService(params = {}) {
   return service({
     url: "/exam/question/add",
     method: "post",
-    data
+    data: params,
+  });
+}
+
+export function getExamDetailService(examId) {
+  return service({
+    url: "/exam/detail",
+    method: "get",
+    params:{ examId },
   });
 }
 
