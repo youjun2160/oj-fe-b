@@ -39,7 +39,7 @@
         <el-button class="exam-add-question" :icon="Plus" type="text" @click="addQuestion(formExam.examId)">
           添加题目
         </el-button>
-        <el-table height="136px" :data="formExam.examQuestionList" class="question-select-list">
+        <el-table :data="formExam.examQuestionList" class="question-select-list">
           <el-table-column prop="questionId" width="180px" label="题目id" />
           <el-table-column prop="title" :show-overflow-tooltip="true" label="题目标题" />
           <el-table-column prop="difficulty" width="80px" label="题目难度">
@@ -112,7 +112,7 @@
 </template>
 
 <script setup>
-import { examAddService,addExamQuestionService, getExamDetailService, editExamService } from "@/apis/exam"
+import { examAddService,addExamQuestionService, getExamDetailService, editExamService, delExamQuestionService } from "@/apis/exam"
 import { getQuestionListService } from "@/apis/question"
 import Selector from "@/components/QuestionSelector.vue"
 import router from '@/router'
@@ -131,7 +131,8 @@ const params = reactive({
   pageNum: 1,
   pageSize: 10,
   difficulty: '',
-  title: ''
+  title: '',
+  excludeIdStr: ''
 })
 
 
@@ -172,10 +173,22 @@ async function getQuestionList() {
 
 const dialogVisible = ref(false)
 
-function addQuestion() {
+async function addQuestion() {
   if (formExam.examId === null || formExam.examId === '') {
     ElMessage.error('请先保存竞赛基本信息')
   } else {
+    //添加需要排除的题目(已经添加过的题目)
+    const examDetail = await getExamDetailService(formExam.examId)
+    examDetail.data.examQuestionList = examDetail.data.examQuestionList || []
+    console.log(examDetail)
+    params.excludeIdStr = ''
+    for(let questionDetail of examDetail.data.examQuestionList){
+      if(params.excludeIdStr !== ''){
+        params.excludeIdStr += ';'
+      }
+      params.excludeIdStr += questionDetail.questionId
+    }
+    
     getQuestionList()
     dialogVisible.value = true
   }
@@ -223,6 +236,7 @@ async function submitSelectQuestion() {
   })
   console.log(examQ)
   await addExamQuestionService(examQ);
+  getExamDetailById(formExam.examId)
   dialogVisible.value = false
   ElMessage.success('竞赛题目添加成功')
 }
@@ -231,10 +245,24 @@ async function getExamDetail() {
   const examId = useRoute().query.examId
   if(examId) {
     formExam.examId = examId
-    const examDetail = await getExamDetailService(examId)
-    Object.assign(formExam, examDetail.data)
-    formExam.examDate = [examDetail.data.startTime, examDetail.data.endTime]
+    getExamDetailById(examId)
   }
+}
+
+async function deleteExamQuestion(examId, questionId) {
+  await delExamQuestionService(examId, questionId)
+  getExamDetailById(examId)
+  ElMessage.success('竞赛题目删除成功')
+}
+
+async function getExamDetailById(examId) {
+  const examDetail = await getExamDetailService(examId)
+  // 修复：当题目列表为空时，后端可能不返回 examQuestionList 字段或返回 null，
+  // 导致 Object.assign 不会更新 formExam.examQuestionList，从而保留了旧数据。
+  // 这里强制确保其为一个数组。
+  examDetail.data.examQuestionList = examDetail.data.examQuestionList || []
+  Object.assign(formExam, examDetail.data)
+  formExam.examDate = [examDetail.data.startTime, examDetail.data.endTime]
 }
 
 getExamDetail()

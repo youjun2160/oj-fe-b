@@ -41,8 +41,16 @@ export function editExamService(params) {
   });
 }
 
-// 建议一并添加：删除竞赛
-export function examDeleteService(examId) {
+// 建议一并添加：删除竞赛题目
+export function delExamQuestionService(examId, questionId) {
+  return service({
+    url: "/exam/question/delete",
+    method: "delete",
+    params: { examId, questionId }
+  });
+}
+
+export function delExamService(examId) {
   return service({
     url: "/exam/delete",
     method: "delete",
