@@ -112,13 +112,14 @@
 </template>
 
 <script setup>
-import { examAddService,addExamQuestionService, getExamDetailService, editExamService, delExamQuestionService } from "@/apis/exam"
+import { examAddService,addExamQuestionService, getExamDetailService, editExamService, delExamQuestionService, publishExamService } from "@/apis/exam"
 import { getQuestionListService } from "@/apis/question"
 import Selector from "@/components/QuestionSelector.vue"
 import router from '@/router'
 import { reactive, ref } from "vue"
 import { Plus } from '@element-plus/icons-vue'
 import { useRoute } from 'vue-router';
+import { ElMessage } from "element-plus"
 
 const type = useRoute().query.type
 const formExam = reactive({
@@ -188,7 +189,7 @@ async function addQuestion() {
       }
       params.excludeIdStr += questionDetail.questionId
     }
-    
+
     getQuestionList()
     dialogVisible.value = true
   }
@@ -266,6 +267,12 @@ async function getExamDetailById(examId) {
 }
 
 getExamDetail()
+
+async function publishExam() {
+  await publishExamService(formExam.examId)
+  router.push("/oj/layout/exam")
+  ElMessage.success("发布成功!")
+}
 
 </script>
 

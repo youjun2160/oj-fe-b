@@ -63,9 +63,10 @@
 
 <script setup>
 import { Plus } from '@element-plus/icons-vue'
-import { getExamListService,getExamDetailService, delExamService } from '@/apis/exam';
+import { getExamListService,getExamDetailService, delExamService, publishExamService, cancelPublishExamService } from '@/apis/exam';
 import { reactive,ref } from 'vue';
 import router from '@/router';
+import { ElMessage } from 'element-plus';
 
 function isNotStartExam(exam) {
   const now = new Date(); //当前时间
@@ -136,5 +137,17 @@ async function onDelete(examId) {
   params.pageNum = 1
   getExamList()
   ElMessage.success('删除竞赛成功')
+}
+
+async function publishExam(examId) {
+  await publishExamService(examId)
+  getExamList()
+  ElMessage.success("发布成功!")
+}
+
+async function cancelPublishExam(examId) {
+  await cancelPublishExamService(examId)
+  getExamList()
+  ElMessage.success("撤销发布成功!")
 }
 </script>
